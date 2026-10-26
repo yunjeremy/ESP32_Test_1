@@ -1,0 +1,18 @@
+Git Bash
+git pull                     # GitHub에 있는 최신 내용을 내 PC로 받아오기 (다른 PC에서 수정했을 경우 대비, 작업 시작 전에 실행)
+git status                   # 지금 어떤 파일이 바뀌었는지 확인 (선택 사항, 확인용)
+git add .                    # 바뀐 파일 전부를 "이번에 저장할 목록"에 올리기 (. = 현재 폴더 전체)
+git commit -m "변경 내용"    # 목록에 올린 파일들을 하나의 버전으로 내 PC에 저장, -m 뒤에 무엇을 바꿨는지 메모
+git push                     # 내 PC에 저장한 버전을 GitHub에 업로드
+
+Arduino
+Verify : 컴파일
+Upload : 보드에 올리기
+Start Debugging : 디버깅
+Serial Monitor : Serial.println("");
+
+ESP32
+RST : 리셋
+BOOT : 아무 일도 일어나지 않는다
+BOOT + RST : 업로드 대기 모드
+

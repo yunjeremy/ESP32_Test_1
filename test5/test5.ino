@@ -102,18 +102,11 @@ float detectPitch(float* buf, int len, int sampleRate) {
 }
 
 void loop() {
-  static unsigned long lastLog = 0;
-  bool doLog = (millis() - lastLog > 10000);  // 진단 로그는 10초에 한 번만
-
   size_t bytesRead = 0;
   esp_err_t readErr = i2s_read(I2S_PORT, rawBuffer, sizeof(rawBuffer), &bytesRead, portMAX_DELAY);
   int samplesRead = bytesRead / sizeof(int32_t);
 
   if (readErr != ESP_OK || bytesRead == 0) {
-    if (doLog) {
-      logTime("!! i2s_read 실패 또는 데이터 0바이트 (에러코드=" + String(readErr) + ", bytesRead=" + String(bytesRead) + ")");
-      lastLog = millis();
-    }
     delay(200);
     return;
   }
@@ -132,27 +125,18 @@ void loop() {
     if (fabs(samples[i]) > maxAmp) maxAmp = fabs(samples[i]);
   }
 
-  // 진단 로그(샘플 수, DC평균, 진폭레벨)는 10초에 한 번만 출력 (조용해도 숫자는 찍힘)
-  if (doLog) {
-    logTime("샘플 " + String(samplesRead) + "개 읽음, DC평균=" + String(mean, 0) + ", 진폭레벨=" + String(maxAmp, 0) +
-            (maxAmp < SILENCE_THRESHOLD ? " (기준치 " + String((int)SILENCE_THRESHOLD) + " 미만 - 조용함)" : " (기준치 초과 - 피치 검출 시도)"));
-    lastLog = millis();
-  }
-
   if (maxAmp < SILENCE_THRESHOLD) {
     delay(200);
     return;
   }
 
-  // 피치가 실제로 검출됐을 때는 매번 출력 (연주 중 반응 확인용)
+  // 지금 들리는 주파수를 실시간으로 표시
   float freq = detectPitch(samples, samplesRead, SAMPLE_RATE);
 
   if (freq > 0) {
     char noteBuf[32];
     freqToNote(freq, noteBuf, sizeof(noteBuf));
     logTime("주파수: " + String(freq, 1) + "Hz  ->  " + String(noteBuf));
-  } else {
-    logTime("피치 검출 실패 (유효한 주기를 못 찾음)");
   }
 
   delay(150);

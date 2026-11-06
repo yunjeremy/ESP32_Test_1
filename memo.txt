@@ -25,3 +25,18 @@ Start Debugging : 디버깅
 Serial Monitor : Serial.println("");
 
 
+OLED 핀	ESP32-S3 핀
+GND		GND
+VDD		3V3
+SCK		GPIO9
+SDA		GPIO8
+
+
+마이크 핀	ESP32-S3 핀
+VDD		3V3
+GND		GND
+SCK		GPIO4
+WS		GPIO5
+SD		GPIO6
+L/R		GND 
+
